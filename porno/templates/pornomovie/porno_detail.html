@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ video.title }} - Detay</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      background: #0a0f1d;
+      font-family: 'Segoe UI', sans-serif;
+      color: #e0d0ff;
+      display: flex;
+      min-height: 100vh;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 40px;
+      overflow-y: hidden;
+    }
+
+    /* Sol navbar */
+    .sidebar {
+      width: 220px;
+      background: #102a43;
+      padding: 30px 20px;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      user-select: none;
+      top: 0;
+      left: 0;
+    }
+
+    .sidebar h2 {
+      margin: 0px 0 20px 0;
+      color: #90caf9;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .sidebar a {
+      color: #cfd8dc;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 10px 12px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background-color: #1976d2;
+      color: white;
+      box-shadow: 0 0 10px #1976d2;
+    }
+
+    /* Ana içerik */
+    .container {
+      margin-left: 240px;
+      margin-top: 40px;
+      padding: 30px;
+      width: 1300px;
+      height: 450px; /* Yüksekliği biraz artırdım */
+      max-width: 95vw;
+      background: #1c2331;
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(21, 101, 192, 0.5);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      color: #cfd8dc;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .poster {
+      flex: 1 1 350px;
+      min-width: 280px;
+    }
+
+    .poster img {
+      width: 100%;
+      height: 420px; /* Resim yüksekliğini artırdım */
+      border-radius: 10px;
+      object-fit: cover;
+      box-shadow: 0 0 15px #1565c0cc;
+    }
+
+    .details {
+      flex: 2 1 400px;
+      min-width: 320px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .details h1 {
+      margin-top: 0;
+      font-size: 2rem;
+      color:rgb(255, 255, 255);
+      text-align: center;
+    }
+
+    .details p {
+      line-height: 1.6;
+      font-size: 1rem;
+      color:rgb(255, 255, 255);
+      text-align: center;
+      margin-top: 60px;
+      margin-bottom: 0;
+    }
+
+    .category-label {
+      margin-top: 25px; /* Kategori yazısını biraz daha aşağı aldım */
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color:rgb(207, 203, 203);
+    }
+
+    .buttons {
+      margin-top: auto; /* Butonları container'ın en altına it */
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .buttons a {
+      margin-top: 170px;
+      padding: 12px 28px;
+      background: #1976d2;
+      color: white;
+      text-decoration: none;
+      border-radius: 30px;
+      font-weight: 600;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      user-select: none;
+      box-shadow: 0 0 15px #1976d2;
+    }
+
+    .buttons a:hover {
+      background: #0d47a1;
+      box-shadow: 0 0 25px #0d47a1;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="sidebar" role="navigation" aria-label="Kategori Listesi">
+    <h2>Kategoriler</h2>
+    <a href="{% url 'home' %}" class="{% if not secili_kategori %}active{% endif %}">Tüm Pornolar</a>
+    {% for category in categories %}
+      <a href="{% url 'category_videos' category.id %}" class="{% if secili_kategori and secili_kategori.id == category.id %}active{% endif %}">
+        {{ category.name }}
+      </a>
+    {% endfor %}
+  </nav>
+
+  <main class="container">
+    <div class="poster">
+      <img src="{{ video.poster.url }}" alt="{{ video.title }}" />
+    </div>
+    <div class="details">
+      <h1>{{ video.title }}</h1>
+      <div class="category-label"><strong>Kategori:</strong> {{ video.category.name }}</div>
+      <p>{{ video.description }}</p>
+      <div class="buttons">
+        <a href="{% url 'porno_watch' video.id %}">😈 Azdıysan Tıkla</a>
+        <a href="{% url 'home' %}">⏪ Geri Dön</a>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tüm Pornolar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      background: #0a0f1d;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sol navbar */
+    .sidebar {
+      width: 220px;
+      background: #102a43;
+      padding: 30px 20px;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar h2 {
+      margin: 0 0 20px 0;
+      color: #90caf9;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-align: center;
+      user-select: none;
+    }
+
+    .sidebar a {
+      color: #cfd8dc;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 10px 12px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background-color: #1976d2;
+      color: white;
+      box-shadow: 0 0 10px #1976d2;
+    }
+
+    /* Ana içerik */
+    .main-content {
+      margin-left: 280px; /* Navbar ile içerik arasındaki boşluğu artırdık */
+      padding: 40px 30px;
+      flex-grow: 1;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+      justify-content: start;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+        justify-content: start;
+      }
+    }
+
+    .card {
+      background: #1c2331;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 12px rgba(0, 123, 255, 0.3);
+      transition: transform 0.2s ease;
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+    }
+
+    .card img {
+      width: 100%;
+      height: 340px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 15px;
+    }
+
+    .card-content h3 {
+      margin: 0;
+      color: #bbdefb;
+    }
+
+    .card-content p {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #cfd8dc;
+      max-height: 70px;
+      overflow: hidden;
+    }
+
+    .card-content a {
+      display: inline-block;
+      margin-top: 12px;
+      background: #1976d2;
+      padding: 8px 16px;
+      border-radius: 30px;
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+    }
+
+    .card-content a:hover {
+      background: #0d47a1;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 10px 0;
+        gap: 10px;
+        position: relative;
+      }
+
+      .sidebar h2 {
+        display: none;
+      }
+
+      .main-content {
+        margin-left: 0;
+        padding: 20px 15px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        justify-content: start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="sidebar">
+    <h2>Kategoriler</h2>
+    <a href="{% url 'home' %}" class="{% if not secili_kategori %}active{% endif %}">Tüm Pornolar</a>
+    {% for category in categories %}
+      <a href="{% url 'category_videos' category.id %}" class="{% if secili_kategori and secili_kategori.id == category.id %}active{% endif %}">
+        {{ category.name }}
+      </a>
+    {% endfor %}
+  </nav>
+
+  <main class="main-content">
+    <div class="grid">
+      {% for video in videos %}
+      <div class="card">
+        <img src="{{ video.poster.url }}" alt="{{ video.title }}">
+        <div class="card-content">
+          <h3>{{ video.title }}</h3>
+          <p>{{ video.description|truncatechars:100 }}</p>
+          <a href="{% url 'porno_detail' video.id %}">Detaylar</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </main>
+
+</body>
+</html>

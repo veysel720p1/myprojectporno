@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ video.title }} - İzle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      background: #0a0f1d;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sol Navbar */
+    .sidebar {
+      width: 220px;
+      background: #102a43;
+      padding: 30px 20px;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      overflow-y: auto;
+      z-index: 1000;
+      user-select: none;
+    }
+
+    .sidebar h2 {
+      margin: 0 0 20px 0;
+      color: #90caf9;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .sidebar a {
+      color: #cfd8dc;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 10px 12px;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background-color: #1976d2;
+      color: white;
+      box-shadow: 0 0 10px #1976d2;
+    }
+
+    /* Ana Bölüm */
+    .main-container {
+      margin-left: 270px;
+      display: flex;
+      flex-direction: row;
+      padding: 30px 20px 30px 10px;
+      gap: 30px;
+      width: calc(100% - 270px);
+      box-sizing: border-box;
+    }
+
+    .video-section {
+      max-width: 1250px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex-shrink: 0;
+      width: 100%;
+    }
+
+    .video-player {
+      height: 700px;
+      background: #1c2331;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(21, 101, 192, 0.5);
+      overflow: hidden;
+    }
+
+    .video-player iframe {
+      width: 100%;
+      height: 700px;
+      border: none;
+      border-radius: 12px;
+    }
+
+    /* Container kaldırıldı, sadece yazılar */
+    .video-info {
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+      box-shadow: none;
+      color: #cfd8dc;
+      max-height: none;
+      overflow: visible;
+      user-select: text;
+    }
+
+    .video-info h1 {
+      color: #bbdefb;
+      font-size: 1.8rem;
+      margin: 15px 0 5px 0;
+      text-align: left;
+    }
+
+    .video-info p {
+      font-size: 1rem;
+      line-height: 1.5;
+      margin: 0 0 15px 0;
+      text-align: left;
+    }
+
+    /* Diğer Videolar */
+    .related-videos {
+      flex: 1;
+      background: #1f2a44;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(21, 101, 192, 0.4);
+      max-height: 880px;
+      overflow-y: auto;
+      user-select: none;
+    }
+
+    .related-videos h3 {
+      color: #90caf9;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 1.3rem;
+    }
+
+    .related-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+      align-items: center;
+    }
+
+    .related-item img {
+      width: 70px;
+      height: 52px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .related-item a {
+      color: #bbdefb;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.2s;
+      font-size: 0.9rem;
+      user-select: text;
+    }
+
+    .related-item a:hover {
+      color: #ffffff;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .main-container {
+        flex-direction: column;
+        margin-left: 0;
+        width: 100%;
+        padding: 20px;
+      }
+
+      .video-section {
+        max-width: 100%;
+        width: 100%;
+      }
+
+      .video-player {
+        height: 400px;
+      }
+
+      .video-player iframe {
+        height: 400px;
+      }
+
+      .related-videos {
+        max-height: 300px;
+        margin-top: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sol Navbar -->
+  <nav class="sidebar" role="navigation" aria-label="Kategori Listesi">
+    <h2>Kategoriler</h2>
+    <a href="{% url 'home' %}" class="{% if not secili_kategori %}active{% endif %}">Tüm Pornolar</a>
+    {% for category in categories %}
+      <a href="{% url 'category_videos' category.id %}" class="{% if secili_kategori and secili_kategori.id == category.id %}active{% endif %}">{{ category.name }}</a>
+    {% endfor %}
+  </nav>
+
+  <!-- Ana İçerik -->
+  <div class="main-container">
+
+    <!-- Video ve Açıklama -->
+    <div class="video-section">
+      <div class="video-player">
+        <iframe 
+          src="https://www.pornhub.com/embed/{{ video.external_id }}" 
+          allowfullscreen 
+          title="{{ video.title }}">
+        </iframe>
+      </div>
+
+      <div class="video-info">
+        <h1>{{ video.title }}</h1>
+        <p>{{ video.description }}</p>
+      </div>
+    </div>
+
+    <!-- Diğer Videolar -->
+    <aside class="related-videos" tabindex="0" aria-label="Diğer Videolar">
+      <h3>Diğer Pornolar</h3>
+      {% for v in videos %}
+        {% if v.id != video.id %}
+        <div class="related-item">
+          <img src="{{ v.poster.url }}" alt="{{ v.title }}">
+          <a href="{% url 'porno_watch' v.id %}">{{ v.title|truncatechars:40 }}</a>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </aside>
+  </div>
+
+</body>
+</html>
